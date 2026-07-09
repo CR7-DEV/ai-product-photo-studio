@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Photo Studio - Shopify MVP</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f6f9; margin: 0; padding: 40px; display: flex; justify-content: center; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 600px; }
+        h1 { color: #1a1a1a; font-size: 24px; margin-bottom: 10px; }
+        p { color: #666; font-size: 14px; margin-bottom: 25px; }
+        textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; resize: vertical; font-size: 14px; margin-bottom: 20px; }
+        button { background-color: #008060; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; }
+        button:hover { background-color: #006e52; }
+        #output { margin-top: 30px; padding: 20px; background: #f9f9f9; border-left: 4px solid #008060; border-radius: 4px; white-space: pre-wrap; display: none; color: #333; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AI Product Photo Studio</h1>
+    <p>Shopify Micro-SaaS MVP (Powered by Gemini 2.5)</p>
+    
+    <label for="prompt" style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Describe how you want to enhance your product photo:</label>
+    <textarea id="prompt" placeholder="Example: Place this Shopify product on a luxury marble table with soft studio lighting..."></textarea>
+    
+    <button onclick="generatePlan()">Generate AI Transformation Plan</button>
+    
+    <div id="output"></div>
+</div>
+
+<script>
+    async function generatePlan() {
+        const promptInput = document.getElementById('prompt').value;
+        const outputDiv = document.getElementById('output');
+        
+        if (!promptInput) {
+            alert('Please enter a description first!');
+            return;
+        }
+        
+        outputDiv.style.display = 'block';
+        outputDiv.innerText = 'Connecting to Gemini Server... Please wait...';
+        
+        try {
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: promptInput })
+            });
+            const data = await response.json();
+            outputDiv.innerText = data.result;
+        } catch (error) {
+            outputDiv.innerText = 'Error connecting to backend.';
+        }
+    }
+</script>
+
+</body>
+</html>
