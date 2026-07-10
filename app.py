@@ -65,9 +65,9 @@ def generate():
             contents=[image_part, text_context]
         )
         
-        # 2. Image Generation Pipeline using standard verified name model mappings
+        # 2. IMAGE PIPELINE MODEL FIX: Using standard capability base endpoint for the latest SDK mapping
         image_result = client.models.generate_images(
-            model='imagen-3.0-generate-002', 
+            model='imagen-3.0-capability-001', 
             prompt=image_generation_prompt,
             config=types.GenerateImagesConfig(
                 number_of_images=1,
