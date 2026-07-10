@@ -2,6 +2,7 @@ import os
 import base64
 from flask import Flask, send_from_directory, request, jsonify
 from google import genai
+from google.genai import types  # Correct types validation import kiya
 
 app = Flask(__name__)
 
@@ -25,11 +26,11 @@ def generate():
         return jsonify({'success': False, 'error': 'No selected file'}), 400
 
     try:
-        # Image ko read aur base64 convert karna preview ke liye
+        # Image bytes read karna
         image_bytes = file.read()
         image_b64 = base64.b64encode(image_bytes).decode('utf-8')
         
-        # Premium studio context set karna
+        # Premium studio context configurations
         if studio == 'linkedin':
             system_context = (
                 "You are an elite corporate photographer. Analyze this user image and generate a high-end "
@@ -57,16 +58,16 @@ def generate():
 
         full_prompt = f"{system_context}\n\nUser Transformation Requirement: {user_prompt}"
         
-        # FIX: Nayi library ke standard dictionary format mein multimodal image pass karna
+        # 100% Core Sahi Format: types.Part wrapper object jo framework accept karega
+        image_part = types.Part.from_bytes(
+            data=image_bytes,
+            mime_type=file.content_type
+        )
+        
+        # Request trigger smoothly validation bypass karegi
         response = client.models.generate_content(
             model='gemini-2.5-flash',
-            contents=[
-                {
-                    'mime_type': file.content_type,
-                    'data': image_bytes
-                },
-                full_prompt
-            ]
+            contents=[image_part, full_prompt]
         )
         
         src_data_url = f"data:{file.content_type};base64,{image_b64}"
