@@ -3,58 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Product Photo Studio - Shopify MVP</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f6f9; margin: 0; padding: 40px; display: flex; justify-content: center; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 600px; }
-        h1 { color: #1a1a1a; font-size: 24px; margin-bottom: 10px; }
-        p { color: #666; font-size: 14px; margin-bottom: 25px; }
-        textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; resize: vertical; font-size: 14px; margin-bottom: 20px; }
-        button { background-color: #008060; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; }
-        button:hover { background-color: #006e52; }
-        #output { margin-top: 30px; padding: 20px; background: #f9f9f9; border-left: 4px solid #008060; border-radius: 4px; white-space: pre-wrap; display: none; color: #333; line-height: 1.6; }
-    </style>
+    <title>AI Multi-Studio Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
 </head>
-<body>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col items-center justify-center p-6">
 
-<div class="container">
-    <h1>AI Product Photo Studio</h1>
-    <p>Shopify Micro-SaaS MVP (Powered by Gemini 2.5)</p>
-    
-    <label for="prompt" style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Describe how you want to enhance your product photo:</label>
-    <textarea id="prompt" placeholder="Example: Place this Shopify product on a luxury marble table with soft studio lighting..."></textarea>
-    
-    <button onclick="generatePlan()">Generate AI Transformation Plan</button>
-    
-    <div id="output"></div>
-</div>
+    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-2">✨ AI Multi-Studio Suite</h1>
+        <p class="text-gray-500 text-center mb-8">Choose a studio to generate your professional AI transformation plan.</p>
 
-<script>
-    async function generatePlan() {
-        const promptInput = document.getElementById('prompt').value;
-        const outputDiv = document.getElementById('output');
-        
-        if (!promptInput) {
-            alert('Please enter a description first!');
-            return;
-        }
-        
-        outputDiv.style.display = 'block';
-        outputDiv.innerText = 'Connecting to Gemini Server... Please wait...';
-        
-        try {
-            const response = await fetch('/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: promptInput })
+        <!-- Studio Selection Tabs -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <button onclick="setStudio('product', 'Example: Place this Shopify product on a luxury marble table...')" id="btn-product" class="studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition">🛍️ Product Photo</button>
+            <button onclick="setStudio('linkedin', 'Example: Convert my casual beach photo into a corporate suit-boot headshot...')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">👔 LinkedIn Headshot</button>
+            <button onclick="setStudio('dating', 'Example: Make my profile picture look warm, approachable, and high-quality for Tinder...')" id="btn-dating" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">❤️ Dating App Profile</button>
+            <button onclick="setStudio('instagram', 'Example: Enhance this photo to look like a cinematic Instagram model in Paris...')" id="btn-instagram" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">📸 Instagram Model</button>
+        </div>
+
+        <!-- Input Form -->
+        <div class="space-y-4">
+            <label id="input-label" class="block text-sm font-medium text-gray-700">Describe how you want to enhance your product photo:</label>
+            <textarea id="promptInput" rows="4" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 shadow-sm" placeholder="Example: Place this Shopify product on a luxury marble table with soft studio lighting..."></textarea>
+            
+            <button onclick="generatePlan()" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-150 transform active:scale-95">
+                Generate AI Transformation Plan
+            </button>
+        </div>
+
+        <!-- Result Section -->
+        <div id="resultContainer" class="hidden mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+            <h3 class="text-lg font-bold text-gray-800 mb-3">🚀 Your AI Strategy:</h3>
+            <div id="resultText" class="text-gray-600 whitespace-pre-line text-sm leading-relaxed"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentStudio = 'product';
+
+        function setStudio(studio, placeholder) {
+            currentStudio = studio;
+            
+            // Labels update
+            const labelMap = {
+                'product': 'Describe how you want to enhance your product photo:',
+                'linkedin': 'Describe your professional headshot requirement:',
+                'dating': 'Describe your dating profile vibe/style requirement:',
+                'instagram': 'Describe your Instagram model aesthetic requirement:'
+            };
+            document.getElementById('input-label').innerText = labelMap[studio];
+            document.getElementById('promptInput').placeholder = placeholder;
+            document.getElementById('promptInput').value = '';
+
+            // Buttons Highlight logic
+            document.querySelectorAll('.studio-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
+                btn.classList.add('border-gray-200', 'text-gray-700');
             });
-            const data = await response.json();
-            outputDiv.innerText = data.result;
-        } catch (error) {
-            outputDiv.innerText = 'Error connecting to backend.';
+            const activeBtn = document.getElementById(`btn-${studio}`);
+            activeBtn.classList.remove('border-gray-200', 'text-gray-700');
+            activeBtn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
         }
-    }
-</script>
 
+        async function generatePlan() {
+            const prompt = document.getElementById('promptInput').value;
+            if (!prompt) return alert('Please enter some details first!');
+
+            const submitBtn = document.getElementById('submitBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultText = document.getElementById('resultText');
+
+            submitBtn.innerText = 'Analyzing with AI...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt, studio: currentStudio })
+                });
+                const data = await response.json();
+                
+                resultContainer.classList.remove('hidden');
+                resultText.innerText = data.result;
+            } catch (error) {
+                alert('Something went wrong!');
+            } finally {
+                submitBtn.innerText = 'Generate AI Transformation Plan';
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
