@@ -5,9 +5,7 @@ import os
 app = Flask(__name__)
 
 # Aapki original correct key
-client = genai.Client(api_key="YOUR_API_KEY_HERE")
-client = genai.Client(api_key=API_KEY)
-
+client = genai.Client(api_key=os.environ.get("API_KEY"))
 @app.route('/')
 def home():
     return send_from_directory('.', 'index.html')
