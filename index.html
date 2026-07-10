@@ -3,21 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Multi-Studio Suite</title>
+    <title>AI Multi-Studio Suite Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 font-sans min-h-screen flex flex-col items-center justify-center p-6">
 
-    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-2">✨ AI Multi-Studio Suite</h1>
-        <p class="text-gray-500 text-center mb-8">Choose a studio to generate your professional AI transformation plan.</p>
+    <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-2">✨ AI Multi-Studio Suite Pro</h1>
+        <p class="text-gray-500 text-center mb-8">Stop using generic filters. Generate studio-quality professional transformations instantly.</p>
 
         <!-- Studio Selection Tabs -->
         <div class="grid grid-cols-2 gap-3 mb-6">
             <button onclick="setStudio('product', 'Example: Place this Shopify product on a luxury marble table...')" id="btn-product" class="studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition">🛍️ Product Photo</button>
-            <button onclick="setStudio('linkedin', 'Example: Convert my casual beach photo into a corporate suit-boot headshot...')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">👔 LinkedIn Headshot</button>
+            <button onclick="setStudio('linkedin', 'Example: Convert my casual photo into a corporate suit-boot headshot...')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">👔 LinkedIn Headshot</button>
             <button onclick="setStudio('dating', 'Example: Make my profile picture look warm, approachable, and high-quality for Tinder...')" id="btn-dating" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">❤️ Dating App Profile</button>
             <button onclick="setStudio('instagram', 'Example: Enhance this photo to look like a cinematic Instagram model in Paris...')" id="btn-instagram" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">📸 Instagram Model</button>
+        </div>
+
+        <!-- Image Upload Section -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Your Source Photo:</label>
+            <div class="flex items-center justify-center w-full">
+                <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p id="upload-status" class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                        <p class="text-xs text-gray-400">PNG, JPG or JPEG (Max 5MB)</p>
+                    </div>
+                    <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="updateUploadStatus()"/>
+                </label>
+            </div>
         </div>
 
         <!-- Input Form -->
@@ -25,25 +40,31 @@
             <label id="input-label" class="block text-sm font-medium text-gray-700">Describe how you want to enhance your product photo:</label>
             <textarea id="promptInput" rows="4" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 shadow-sm" placeholder="Example: Place this Shopify product on a luxury marble table with soft studio lighting..."></textarea>
             
-            <button onclick="generatePlan()" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-150 transform active:scale-95">
-                Generate AI Transformation Plan
+            <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-150 transform active:scale-95">
+                Generate Asli AI Photo
             </button>
         </div>
 
-        <!-- Result Section -->
-        <div id="resultContainer" class="hidden mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
-            <h3 class="text-lg font-bold text-gray-800 mb-3">🚀 Your AI Strategy:</h3>
-            <div id="resultText" class="text-gray-600 whitespace-pre-line text-sm leading-relaxed"></div>
+        <!-- Result Section for Real Photo -->
+        <div id="resultContainer" class="hidden mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 flex flex-col items-center">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">🚀 Your Premium Generated Photo:</h3>
+            <img id="outputImage" src="" alt="AI Output" class="max-w-full h-auto rounded-xl shadow-md border mb-4">
+            <div id="strategyBox" class="w-full p-4 bg-white border rounded-xl text-gray-600 text-sm whitespace-pre-line leading-relaxed"></div>
         </div>
     </div>
 
     <script>
         let currentStudio = 'product';
 
+        function updateUploadStatus() {
+            const input = document.getElementById('imageInput');
+            if(input.files && input.files[0]) {
+                document.getElementById('upload-status').innerHTML = `<span class="font-semibold text-green-600">Selected: ${input.files[0].name}</span>`;
+            }
+        }
+
         function setStudio(studio, placeholder) {
             currentStudio = studio;
-            
-            // Labels update
             const labelMap = {
                 'product': 'Describe how you want to enhance your product photo:',
                 'linkedin': 'Describe your professional headshot requirement:',
@@ -52,9 +73,7 @@
             };
             document.getElementById('input-label').innerText = labelMap[studio];
             document.getElementById('promptInput').placeholder = placeholder;
-            document.getElementById('promptInput').value = '';
 
-            // Buttons Highlight logic
             document.querySelectorAll('.studio-btn').forEach(btn => {
                 btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
                 btn.classList.add('border-gray-200', 'text-gray-700');
@@ -64,31 +83,43 @@
             activeBtn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
         }
 
-        async function generatePlan() {
+        async function generatePhoto() {
             const prompt = document.getElementById('promptInput').value;
-            if (!prompt) return alert('Please enter some details first!');
+            const fileInput = document.getElementById('imageInput');
+            
+            if (!fileInput.files[0]) return alert('Please upload a source photo first!');
+            if (!prompt) return alert('Please enter prompt details!');
 
             const submitBtn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
-            const resultText = document.getElementById('resultText');
-
-            submitBtn.innerText = 'Analyzing with AI...';
+            
+            submitBtn.innerText = 'AI Engine Rendering High-End Photo...';
             submitBtn.disabled = true;
+
+            // Form data creation to send image + text
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            formData.append('prompt', prompt);
+            formData.append('studio', currentStudio);
 
             try {
                 const response = await fetch('/generate', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: prompt, studio: currentStudio })
+                    body: formData
                 });
                 const data = await response.json();
                 
-                resultContainer.classList.remove('hidden');
-                resultText.innerText = data.result;
+                if(data.success) {
+                    resultContainer.classList.remove('hidden');
+                    document.getElementById('outputImage').src = data.image_url;
+                    document.getElementById('strategyBox').innerText = data.strategy;
+                } else {
+                    alert('Error: ' + data.error);
+                }
             } catch (error) {
                 alert('Something went wrong!');
             } finally {
-                submitBtn.innerText = 'Generate AI Transformation Plan';
+                submitBtn.innerText = 'Generate Asli AI Photo';
                 submitBtn.disabled = false;
             }
         }
