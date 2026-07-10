@@ -25,7 +25,7 @@ def generate():
     try:
         image_bytes = file.read()
         
-        # Studio wise strict text contexts - Gagar mein Sagar
+        # Studio wise strict text contexts - Gagar mein Sagar (Easy Grammar)
         if studio == 'linkedin':
             text_context = (
                 "You are a luxury branding expert. Provide a highly compressed 3-bullet-point strategy "
@@ -65,9 +65,9 @@ def generate():
             contents=[image_part, text_context]
         )
         
-        # 2. IMAGE PIPELINE MODEL FIX: Using standard capability base endpoint for the latest SDK mapping
+        # 2. IMAGE PIPELINE MODEL FIX: Using production model mapping string bypass handler
         image_result = client.models.generate_images(
-            model='imagen-3.0-capability-001', 
+            model='imagen-3.0-generate-002', 
             prompt=image_generation_prompt,
             config=types.GenerateImagesConfig(
                 number_of_images=1,
