@@ -25,14 +25,14 @@ def generate():
     try:
         image_bytes = file.read()
         
-        # 1. Studio wise strict text contexts - Gagar mein Sagar (Ultra Short, 3 lines maximum, easy grammar)
+        # Studio wise strict text contexts - Gagar mein Sagar
         if studio == 'linkedin':
             text_context = (
                 "You are a luxury branding expert. Provide a highly compressed 3-bullet-point strategy "
                 "in plain, super easy English explaining how we fixed the flat lighting, replaced the messy background "
                 "with an elite corporate office blur, and enhanced the attire to a premium look. Keep it ultra short."
             )
-            image_generation_prompt = f"A premium corporate LinkedIn headshot of the person, high-end professional business attire, luxury modern blurred office background, professional studio lighting, depth of field, 8k resolution, crisp details, removing any imperfections or clutter. User requirement: {user_prompt}"
+            image_generation_prompt = f"A premium corporate LinkedIn headshot of a person, high-end professional business attire, luxury modern blurred office background, professional studio lighting, depth of field, 8k resolution, crisp details. User requirement: {user_prompt}"
         
         elif studio == 'dating':
             text_context = (
@@ -40,7 +40,7 @@ def generate():
                 "in plain, super easy English explaining how we fixed the flat expressions, added golden hour lighting, "
                 "and created a warm high-status lifestyle atmosphere. Keep it ultra short."
             )
-            image_generation_prompt = f"An attractive, high-quality, professional dating profile portrait for Tinder, warm golden hour natural lighting, cinematic bokeh background of a high-end rooftop cafe, high status lifestyle look, smiling naturally, photorealistic, 8k. User requirement: {user_prompt}"
+            image_generation_prompt = f"An attractive, high-quality profile portrait for Tinder, warm golden hour natural lighting, cinematic bokeh background of a high-end rooftop cafe, smiling naturally, photorealistic, 8k. User requirement: {user_prompt}"
         
         elif studio == 'instagram':
             text_context = (
@@ -48,7 +48,7 @@ def generate():
                 "in plain, super easy English explaining how we created high-contrast moody colors, enhanced model physics, "
                 "and added a cinematic viral travel aesthetic. Keep it ultra short."
             )
-            image_generation_prompt = f"A cinematic aesthetic fashion model shoot, high contrast dramatic lighting, moody editorial color grading, highly fashionable streetwear, cinematic premium city background, viral instagram style, hyper-realistic portrait. User requirement: {user_prompt}"
+            image_generation_prompt = f"A cinematic aesthetic fashion model shoot, high contrast dramatic lighting, moody editorial color grading, highly fashionable streetwear, cinematic premium city background, hyper-realistic portrait. User requirement: {user_prompt}"
         
         else:
             text_context = (
@@ -56,19 +56,18 @@ def generate():
                 "in plain, super easy English explaining how we fixed shadows, added high-end commercial placement, "
                 "and enhanced colors for high Shopify sales conversions. Keep it ultra short."
             )
-            image_generation_prompt = f"A high-end commercial studio product photography shot, luxury marble tabletop, clean minimalistic studio backdrop, perfect soft diffused lighting, dynamic angles, ultra-premium commercial quality, ready for Shopify banner. User requirement: {user_prompt}"
+            image_generation_prompt = f"A high-end commercial studio product photography shot, luxury marble tabletop, clean minimalistic studio backdrop, perfect soft diffused lighting, ultra-premium commercial quality. User requirement: {user_prompt}"
 
-        # 2. Text Strategy Generation (Short & Simple Rules)
+        # 1. Strategy Generation via Gemini 2.5 Flash
         image_part = types.Part.from_bytes(data=image_bytes, mime_type=file.content_type)
         text_response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=[image_part, text_context]
         )
         
-        # 3. Asli Image Generation Pipeline (Using Imagen 3)
-        # Yeh model user ki pehli kamiyon ko dur karke ek naya crores-worth perfect version banayega
+        # 2. Image Generation Pipeline using standard verified name model mappings
         image_result = client.models.generate_images(
-            model='imagen-3.0-generate-002',
+            model='imagen-3.0-generate-002', 
             prompt=image_generation_prompt,
             config=types.GenerateImagesConfig(
                 number_of_images=1,
@@ -78,7 +77,6 @@ def generate():
             )
         )
         
-        # Generated image bytes nikalna aur base64 url banana
         generated_bytes = image_result.generated_images[0].image.image_bytes
         generated_b64 = base64.b64encode(generated_bytes).decode('utf-8')
         output_data_url = f"data:image/jpeg;base64,{generated_b64}"
