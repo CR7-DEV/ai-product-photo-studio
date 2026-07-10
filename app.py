@@ -2,11 +2,11 @@ import os
 import base64
 from flask import Flask, send_from_directory, request, jsonify
 from google import genai
-from google.genai import types  # Correct types validation import kiya
+from google.genai import types
 
 app = Flask(__name__)
 
-# API Key initialization
+# Initialize the Gemini Client
 client = genai.Client(api_key=os.environ.get("API_KEY"))
 
 @app.route('/')
@@ -22,60 +22,71 @@ def generate():
     user_prompt = request.form.get('prompt', '')
     studio = request.form.get('studio', 'product')
 
-    if file.filename == '':
-        return jsonify({'success': False, 'error': 'No selected file'}), 400
-
     try:
-        # Image bytes read karna
         image_bytes = file.read()
-        image_b64 = base64.b64encode(image_bytes).decode('utf-8')
         
-        # Premium studio context configurations
+        # 1. Studio wise strict text contexts - Gagar mein Sagar (Ultra Short, 3 lines maximum, easy grammar)
         if studio == 'linkedin':
-            system_context = (
-                "You are an elite corporate photographer. Analyze this user image and generate a high-end "
-                "professional headshot strategy (suit-and-tie, premium office studio background, clean professional look). "
-                "Output must contain: 1. Visual Audit, 2. Studio Lighting Blueprint, 3. Pixel-perfect Transformation steps."
+            text_context = (
+                "You are a luxury branding expert. Provide a highly compressed 3-bullet-point strategy "
+                "in plain, super easy English explaining how we fixed the flat lighting, replaced the messy background "
+                "with an elite corporate office blur, and enhanced the attire to a premium look. Keep it ultra short."
             )
+            image_generation_prompt = f"A premium corporate LinkedIn headshot of the person, high-end professional business attire, luxury modern blurred office background, professional studio lighting, depth of field, 8k resolution, crisp details, removing any imperfections or clutter. User requirement: {user_prompt}"
+        
         elif studio == 'dating':
-            system_context = (
-                "You are an expert dating photographer. Analyze this photo to transform it "
-                "into an approachable, warm, ultra-premium portrait suitable for top dating tiers. "
-                "Output must contain: 1. Charm & Lighting Audit, 2. Background Atmosphere Design, 3. Actionable Enhancements."
+            text_context = (
+                "You are a dating profile consultant. Provide a highly compressed 3-bullet-point strategy "
+                "in plain, super easy English explaining how we fixed the flat expressions, added golden hour lighting, "
+                "and created a warm high-status lifestyle atmosphere. Keep it ultra short."
             )
+            image_generation_prompt = f"An attractive, high-quality, professional dating profile portrait for Tinder, warm golden hour natural lighting, cinematic bokeh background of a high-end rooftop cafe, high status lifestyle look, smiling naturally, photorealistic, 8k. User requirement: {user_prompt}"
+        
         elif studio == 'instagram':
-            system_context = (
-                "You are a luxury fashion photographer. Analyze this photo "
-                "and craft an elite aesthetic plan to turn it into a high-fashion, high-contrast, moody model aesthetic. "
-                "Output must contain: 1. Model Vibe Audit, 2. Cinematic Color Blueprint, 3. Visual Transformation details."
+            text_context = (
+                "You are a fashion shoot manager. Provide a highly compressed 3-bullet-point strategy "
+                "in plain, super easy English explaining how we created high-contrast moody colors, enhanced model physics, "
+                "and added a cinematic viral travel aesthetic. Keep it ultra short."
             )
+            image_generation_prompt = f"A cinematic aesthetic fashion model shoot, high contrast dramatic lighting, moody editorial color grading, highly fashionable streetwear, cinematic premium city background, viral instagram style, hyper-realistic portrait. User requirement: {user_prompt}"
+        
         else:
-            system_context = (
-                "You are an elite e-commerce product catalog designer. Analyze this product photo "
-                "to completely revamp its context for luxury Shopify storefronts. "
-                "Output must contain: 1. Product Placement Audit, 2. High-end Studio Lighting Blueprint, 3. Commercial Conversion details."
+            text_context = (
+                "You are an e-commerce designer. Provide a highly compressed 3-bullet-point strategy "
+                "in plain, super easy English explaining how we fixed shadows, added high-end commercial placement, "
+                "and enhanced colors for high Shopify sales conversions. Keep it ultra short."
             )
+            image_generation_prompt = f"A high-end commercial studio product photography shot, luxury marble tabletop, clean minimalistic studio backdrop, perfect soft diffused lighting, dynamic angles, ultra-premium commercial quality, ready for Shopify banner. User requirement: {user_prompt}"
 
-        full_prompt = f"{system_context}\n\nUser Transformation Requirement: {user_prompt}"
-        
-        # 100% Core Sahi Format: types.Part wrapper object jo framework accept karega
-        image_part = types.Part.from_bytes(
-            data=image_bytes,
-            mime_type=file.content_type
-        )
-        
-        # Request trigger smoothly validation bypass karegi
-        response = client.models.generate_content(
+        # 2. Text Strategy Generation (Short & Simple Rules)
+        image_part = types.Part.from_bytes(data=image_bytes, mime_type=file.content_type)
+        text_response = client.models.generate_content(
             model='gemini-2.5-flash',
-            contents=[image_part, full_prompt]
+            contents=[image_part, text_context]
         )
         
-        src_data_url = f"data:{file.content_type};base64,{image_b64}"
+        # 3. Asli Image Generation Pipeline (Using Imagen 3)
+        # Yeh model user ki pehli kamiyon ko dur karke ek naya crores-worth perfect version banayega
+        image_result = client.models.generate_images(
+            model='imagen-3.0-generate-002',
+            prompt=image_generation_prompt,
+            config=types.GenerateImagesConfig(
+                number_of_images=1,
+                output_mime_type="image/jpeg",
+                aspect_ratio="3:4" if studio != 'product' else "1:1",
+                person_generation="ALLOW_ADULT"
+            )
+        )
+        
+        # Generated image bytes nikalna aur base64 url banana
+        generated_bytes = image_result.generated_images[0].image.image_bytes
+        generated_b64 = base64.b64encode(generated_bytes).decode('utf-8')
+        output_data_url = f"data:image/jpeg;base64,{generated_b64}"
 
         return jsonify({
             'success': True,
-            'image_url': src_data_url,
-            'strategy': response.text
+            'image_url': output_data_url,
+            'strategy': text_response.text
         })
 
     except Exception as e:
