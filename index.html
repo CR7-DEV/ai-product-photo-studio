@@ -7,19 +7,14 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        /* Pink & Bold Strategy Box */
         .pink-strategy-box {
             border: 3px solid #db2777;
             color: #be185d;
             font-weight: 800;
             background-color: #fff1f2;
         }
-        .share-btn {
-            transition: all 0.2s ease-in-out;
-        }
-        .share-btn:hover {
-            transform: scale(1.05);
-        }
+        .share-btn { transition: all 0.2s ease-in-out; }
+        .share-btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -27,11 +22,13 @@
     <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
         <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-6">✨ AI Multi-Studio Suite Pro</h1>
         
+        <!-- Billing Banner -->
         <div class="bg-gray-900 rounded-xl p-4 mb-6 text-center shadow-lg border border-gray-700">
             <p class="text-white text-sm">⚡ Pro Plan: Get Unlimited 4K Transformations & Priority Access.</p>
             <button class="mt-2 bg-pink-600 text-white text-xs font-bold py-1 px-4 rounded-full hover:bg-pink-700">Billing: ₹99/month</button>
         </div>
 
+        <!-- Studio Layout Options -->
         <div class="grid grid-cols-2 gap-3 mb-6">
             <button onclick="setStudio('product')" id="btn-product" class="studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition">🛍️ Product</button>
             <button onclick="setStudio('linkedin')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">👔 LinkedIn</button>
@@ -39,6 +36,7 @@
             <button onclick="setStudio('instagram')" id="btn-instagram" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">📸 Instagram</button>
         </div>
 
+        <!-- File Upload Form -->
         <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Source Photo:</label>
         <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 mb-6">
             <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="updateUploadStatus()" />
@@ -48,8 +46,9 @@
         <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4" placeholder="What should I fix in this photo?"></textarea>
         <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl">Generate Master Shot 🚀</button>
 
+        <!-- Dynamic Output Display Panel -->
         <div id="resultContainer" class="hidden mt-8">
-            <img id="outputImage" class="w-full rounded-xl shadow-lg border-4 border-white mb-4">
+            <img id="outputImage" class="w-full rounded-xl shadow-lg border-4 border-white mb-4" crossOrigin="anonymous">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 <button onclick="downloadImage()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl shadow-lg">
@@ -60,6 +59,7 @@
                 </button>
             </div>
 
+            <!-- Social Engine Matrix -->
             <div class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200">
                 <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 text-center">Share Directly To:</p>
                 <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -71,6 +71,7 @@
                 </div>
             </div>
 
+            <!-- Strategy Response Layout -->
             <div class="p-6 pink-strategy-box rounded-xl">
                 <h3 class="text-lg mb-3">⚡ Strategic Action Blueprint:</h3>
                 <div id="strategyBox" class="whitespace-pre-line leading-relaxed"></div>
@@ -139,7 +140,7 @@
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
             
-            submitBtn.innerText = 'AI Engine Transforming Facials & Structure... ⚙️';
+            submitBtn.innerText = 'AI Engine Transforming Facials & Background... ⚙️';
             submitBtn.disabled = true;
 
             try {
