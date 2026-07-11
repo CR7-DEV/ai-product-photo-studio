@@ -7,12 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .pink-strategy-box {
-            border: 3px solid #db2777;
-            color: #be185d;
-            font-weight: 800;
-            background-color: #fff1f2;
-        }
+        .pink-strategy-box { border: 3px solid #db2777; color: #be185d; font-weight: 800; background-color: #fff1f2; }
         .share-btn { transition: all 0.2s ease-in-out; }
         .share-btn:hover { transform: scale(1.05); }
     </style>
@@ -40,29 +35,24 @@
             <p id="upload-status" class="text-gray-500 text-sm text-center pointer-events-none">📸 Click to upload photo or Drag & Drop</p>
         </div>
 
-        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4 text-gray-700 shadow-sm focus:ring-2 focus:ring-indigo-500" placeholder="What should I fix in this photo?"></textarea>
+        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4 text-gray-700 shadow-sm" placeholder="What should I fix in this photo?"></textarea>
         <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-md hover:bg-indigo-700 transition">Generate Master Shot 🚀</button>
 
         <div id="resultContainer" class="hidden mt-8">
             <img id="outputImage" class="w-full rounded-xl shadow-lg border-4 border-white mb-4" crossOrigin="anonymous">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <button onclick="downloadImage()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl shadow-lg">
-                    💾 Download Masterpiece
-                </button>
-                <button onclick="nativeShare()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg">
-                    🔗 Quick Share (All Apps)
-                </button>
+                <button onclick="downloadImage()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl shadow-lg">💾 Download Masterpiece</button>
+                <button onclick="nativeShare()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg">🔗 Quick Share (All Apps)</button>
             </div>
 
             <div class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200">
-                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 text-center">Share Directly To:</p>
                 <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                    <button onclick="shareTo('whatsapp')" class="share-btn bg-green-500 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">WhatsApp</button>
-                    <button onclick="shareTo('instagram')" class="share-btn bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Instagram</button>
-                    <button onclick="shareTo('facebook')" class="share-btn bg-blue-600 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Facebook</button>
-                    <button onclick="shareTo('linkedin')" class="share-btn bg-blue-700 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">LinkedIn</button>
-                    <button onclick="shareTo('snapchat')" class="share-btn bg-yellow-400 text-gray-900 text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Snapchat</button>
+                    <button onclick="shareTo('whatsapp')" class="share-btn bg-green-500 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">WhatsApp</button>
+                    <button onclick="shareTo('instagram')" class="share-btn bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">Instagram</button>
+                    <button onclick="shareTo('facebook')" class="share-btn bg-blue-600 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">Facebook</button>
+                    <button onclick="shareTo('linkedin')" class="share-btn bg-blue-700 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">LinkedIn</button>
+                    <button onclick="shareTo('snapchat')" class="share-btn bg-yellow-400 text-gray-900 text-xs font-bold py-2 px-1 rounded-lg text-center">Snapchat</button>
                 </div>
             </div>
 
@@ -75,79 +65,39 @@
 
     <script>
         let currentStudio = 'product';
-        
         function updateUploadStatus() {
             const input = document.getElementById('imageInput');
             if(input.files && input.files[0]) {
                 document.getElementById('upload-status').innerHTML = `<span class="text-indigo-600 font-bold">⚡ Loaded: ${input.files[0].name}</span>`;
             }
         }
-
         function setStudio(type) {
             currentStudio = type;
             document.querySelectorAll('.studio-btn').forEach(btn => {
                 btn.classList.remove('border-2', 'border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
                 btn.classList.add('border', 'border-gray-200', 'text-gray-700');
             });
-            const activeBtn = document.getElementById(`btn-${type}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('border', 'border-gray-200', 'text-gray-700');
-                activeBtn.classList.add('border-2', 'border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
-            }
+            document.getElementById(`btn-${type}`).className = "studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition";
         }
-
-        function compressImage(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600; 
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.8);
-                    };
-                };
-            });
-        }
-
         async function generatePhoto() {
             const prompt = document.getElementById('promptInput').value;
             const fileInput = document.getElementById('imageInput');
-            
-            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a source photo first!');
-            if (!prompt) return alert('Please enter prompt details!');
+            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a photo first!');
+            if (!prompt) return alert('Please enter details!');
 
             const submitBtn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
-            
-            submitBtn.innerText = 'AI Engine Transforming Structure... ⚙️';
+            submitBtn.innerText = 'AI Transformation Engine Running... ⚙️';
             submitBtn.disabled = true;
 
             try {
-                const compressedBlob = await compressImage(fileInput.files[0]);
                 const formData = new FormData();
-                formData.append('image', compressedBlob, 'upload.jpg');
+                formData.append('image', fileInput.files[0]);
                 formData.append('prompt', prompt);
                 formData.append('studio', currentStudio);
 
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch('/generate', { method: 'POST', body: formData });
                 const data = await response.json();
                 
                 if(data.success) {
@@ -156,66 +106,22 @@
                     document.getElementById('strategyBox').innerText = data.strategy;
                     resultContainer.scrollIntoView({ behavior: 'smooth' });
                 } else {
-                    alert('Error: ' + data.error);
+                    alert('Server response error: ' + data.error);
                 }
             } catch (error) {
-                alert('Something went wrong during generation!');
+                alert('Connection failure during generation!');
             } finally {
                 submitBtn.innerText = 'Generate Master Shot 🚀';
                 submitBtn.disabled = false;
             }
         }
-
         function downloadImage() {
             const link = document.createElement('a');
             link.href = document.getElementById('outputImage').src;
             link.download = 'AI-Masterpiece.jpg';
             link.click();
         }
-
-        async function nativeShare() {
-            const imgElement = document.getElementById('outputImage');
-            try {
-                const response = await fetch(imgElement.src);
-                const blob = await response.blob();
-                const file = new File([blob], 'AI-Masterpiece.jpg', { type: blob.type });
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'My AI Transformation',
-                        text: 'Look at my professional photo transformation via AI Multi-Studio Suite Pro!',
-                    });
-                } else {
-                    alert("Native sharing not supported on this browser. Use the direct buttons below!");
-                }
-            } catch (error) {
-                console.error('Error sharing:', error);
-            }
-        }
-
-        window.shareTo = function(platform) {
-            const text = encodeURIComponent("Check out my professional AI transformation on AI Multi-Studio Suite Pro! 🔥");
-            const url = encodeURIComponent(window.location.href);
-            let shareUrl = '';
-
-            switch(platform) {
-                case 'whatsapp':
-                    shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
-                    break;
-                case 'facebook':
-                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-                    break;
-                case 'linkedin':
-                    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-                    break;
-                case 'instagram':
-                case 'snapchat':
-                    alert(`For ${platform.toUpperCase()}, please click 'Download Masterpiece' and post directly to your Feed/Stories!`);
-                    return;
-            }
-            if(shareUrl) window.open(shareUrl, '_blank');
-        }
+        function shareTo(p) { alert(`Feature ready! Post directly via downloaded image for ${p.toUpperCase()}`); }
     </script>
 </body>
 </html>
