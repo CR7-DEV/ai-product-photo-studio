@@ -22,13 +22,11 @@
     <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
         <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-6">✨ AI Multi-Studio Suite Pro</h1>
         
-        <!-- Billing Banner -->
         <div class="bg-gray-900 rounded-xl p-4 mb-6 text-center shadow-lg border border-gray-700">
             <p class="text-white text-sm">⚡ Pro Plan: Get Unlimited 4K Transformations & Priority Access.</p>
             <button class="mt-2 bg-pink-600 text-white text-xs font-bold py-1 px-4 rounded-full hover:bg-pink-700">Billing: ₹99/month</button>
         </div>
 
-        <!-- Studio Layout Options -->
         <div class="grid grid-cols-2 gap-3 mb-6">
             <button onclick="setStudio('product')" id="btn-product" class="studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition">🛍️ Product</button>
             <button onclick="setStudio('linkedin')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">👔 LinkedIn</button>
@@ -36,17 +34,15 @@
             <button onclick="setStudio('instagram')" id="btn-instagram" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">📸 Instagram</button>
         </div>
 
-        <!-- File Upload Form -->
         <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Source Photo:</label>
-        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 mb-6">
-            <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="updateUploadStatus()" />
-            <p id="upload-status" class="text-gray-500 text-sm">Click to upload photo</p>
-        </label>
+        <div class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 mb-6 relative hover:bg-gray-100 transition">
+            <input type="file" id="imageInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onchange="updateUploadStatus()" />
+            <p id="upload-status" class="text-gray-500 text-sm text-center pointer-events-none">📸 Click to upload photo or Drag & Drop</p>
+        </div>
 
-        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4" placeholder="What should I fix in this photo?"></textarea>
-        <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl">Generate Master Shot 🚀</button>
+        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4 text-gray-700 shadow-sm focus:ring-2 focus:ring-indigo-500" placeholder="What should I fix in this photo?"></textarea>
+        <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-md hover:bg-indigo-700 transition">Generate Master Shot 🚀</button>
 
-        <!-- Dynamic Output Display Panel -->
         <div id="resultContainer" class="hidden mt-8">
             <img id="outputImage" class="w-full rounded-xl shadow-lg border-4 border-white mb-4" crossOrigin="anonymous">
             
@@ -59,7 +55,6 @@
                 </button>
             </div>
 
-            <!-- Social Engine Matrix -->
             <div class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200">
                 <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 text-center">Share Directly To:</p>
                 <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -71,7 +66,6 @@
                 </div>
             </div>
 
-            <!-- Strategy Response Layout -->
             <div class="p-6 pink-strategy-box rounded-xl">
                 <h3 class="text-lg mb-3">⚡ Strategic Action Blueprint:</h3>
                 <div id="strategyBox" class="whitespace-pre-line leading-relaxed"></div>
@@ -85,7 +79,7 @@
         function updateUploadStatus() {
             const input = document.getElementById('imageInput');
             if(input.files && input.files[0]) {
-                document.getElementById('upload-status').innerText = `⚡ Loaded: ${input.files[0].name}`;
+                document.getElementById('upload-status').innerHTML = `<span class="text-indigo-600 font-bold">⚡ Loaded: ${input.files[0].name}</span>`;
             }
         }
 
@@ -123,7 +117,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.7);
+                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.8);
                     };
                 };
             });
@@ -133,14 +127,14 @@
             const prompt = document.getElementById('promptInput').value;
             const fileInput = document.getElementById('imageInput');
             
-            if (!fileInput.files[0]) return alert('Please upload a source photo first!');
+            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a source photo first!');
             if (!prompt) return alert('Please enter prompt details!');
 
             const submitBtn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
             
-            submitBtn.innerText = 'AI Engine Transforming Facials & Background... ⚙️';
+            submitBtn.innerText = 'AI Engine Transforming Structure... ⚙️';
             submitBtn.disabled = true;
 
             try {
