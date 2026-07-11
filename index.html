@@ -5,102 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Multi-Studio Suite Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .premium-strategy-box {
-            border: 2px dotted #4f46e5;
-            background-color: #fdfdfd;
-            font-size: 1.05rem;
-            color: #334155;
+        /* Pink & Bold Strategy Box */
+        .pink-strategy-box {
+            border: 3px solid #db2777;
+            color: #be185d;
+            font-weight: 800;
+            background-color: #fff1f2;
         }
-        /* Cinematic filter dynamic adjustments */
-        .studio-preview-linkedin { filter: contrast(1.1) brightness(1.05) saturate(0.95); box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.15); }
-        .studio-preview-dating { filter: saturate(1.15) brightness(1.08) contrast(1.02); box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.15); }
-        .studio-preview-instagram { filter: contrast(1.2) saturate(0.85) brightness(0.95); box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.15); }
-        .studio-preview-product { filter: contrast(1.1) brightness(1.1) saturate(1.05); box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.15); }
+        .share-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .share-btn:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6">
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
-        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-2">✨ AI Multi-Studio Suite Pro</h1>
-        <p class="text-gray-500 text-center mb-8">Instant Multi-Million Dollar AI Transformation Engine.</p>
+    <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-6">✨ AI Multi-Studio Suite Pro</h1>
+        
+        <div class="bg-gray-900 rounded-xl p-4 mb-6 text-center shadow-lg border border-gray-700">
+            <p class="text-white text-sm">⚡ Pro Plan: Get Unlimited 4K Transformations & Priority Access.</p>
+            <button class="mt-2 bg-pink-600 text-white text-xs font-bold py-1 px-4 rounded-full hover:bg-pink-700">Billing: ₹99/month</button>
+        </div>
 
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <button onclick="setStudio('product', 'Example: Place this Shopify product on a luxury marble table...')" id="btn-product" class="studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition">🛍️ Product Photo</button>
-            <button onclick="setStudio('linkedin', 'Example: Convert my casual photo into a corporate suit-boot headshot...')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">👔 LinkedIn Headshot</button>
-            <button onclick="setStudio('dating', 'Example: Make my profile picture look warm, approachable, and high-quality for Tinder...')" id="btn-dating" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">❤️ Dating App Profile</button>
-            <button onclick="setStudio('instagram', 'Example: Enhance this photo to look like a cinematic Instagram model in Paris...')" id="btn-instagram" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 hover:border-indigo-500 text-gray-700 transition">📸 Instagram Model</button>
+            <button onclick="setStudio('product')" id="btn-product" class="studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition">🛍️ Product</button>
+            <button onclick="setStudio('linkedin')" id="btn-linkedin" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">👔 LinkedIn</button>
+            <button onclick="setStudio('dating')" id="btn-dating" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">❤️ Dating</button>
+            <button onclick="setStudio('instagram')" id="btn-instagram" class="studio-btn p-3 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 transition">📸 Instagram</button>
         </div>
 
-        <div class="mb-6">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Your Source Photo:</label>
-            <div class="flex items-center justify-center w-full">
-                <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        <p id="upload-status" class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                        <p class="text-xs text-gray-400">PNG, JPG or JPEG</p>
-                    </div>
-                    <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="updateUploadStatus()"/>
-                </label>
-            </div>
-        </div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Source Photo:</label>
+        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 mb-6">
+            <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="updateUploadStatus()" />
+            <p id="upload-status" class="text-gray-500 text-sm">Click to upload photo</p>
+        </label>
 
-        <div class="space-y-4">
-            <label id="input-label" class="block text-sm font-semibold text-gray-700">Describe how you want to enhance your product photo:</label>
-            <textarea id="promptInput" rows="3" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 shadow-sm" placeholder="Example: Place this Shopify product on a luxury marble table with soft studio lighting..."></textarea>
+        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4" placeholder="What should I fix in this photo?"></textarea>
+        <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl">Generate Master Shot 🚀</button>
+
+        <div id="resultContainer" class="hidden mt-8">
+            <img id="outputImage" class="w-full rounded-xl shadow-lg border-4 border-white mb-4">
             
-            <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-150 transform active:scale-95">
-                Generate Crores-Worth Master Photo 🚀
-            </button>
-        </div>
-
-        <div id="resultContainer" class="hidden mt-8 space-y-6">
-            <div class="p-6 bg-slate-50 rounded-xl border border-gray-200 flex flex-col items-center">
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">✨ Your Transformed Master Portrait</h3>
-                <div class="relative overflow-hidden rounded-xl border-4 border-white shadow-md">
-                    <img id="outputImage" src="" alt="AI Transformed Output" class="max-w-full h-auto max-h-96 transition-all duration-300">
-                </div>
-                <p class="text-xs text-gray-400 mt-3">⚡ AI Engine optimized look, eliminating shadows and flat lighting errors.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                <button onclick="downloadImage()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl shadow-lg">
+                    💾 Download Masterpiece
+                </button>
+                <button onclick="nativeShare()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg">
+                    🔗 Quick Share (All Apps)
+                </button>
             </div>
 
-            <div class="p-6 premium-strategy-box rounded-xl shadow-sm">
-                <h3 class="text-lg font-bold text-indigo-700 mb-3 flex items-center">⚡ Strategic Action Blueprint:</h3>
-                <div id="strategyBox" class="whitespace-pre-line leading-relaxed font-semibold text-gray-700"></div>
+            <div class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200">
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 text-center">Share Directly To:</p>
+                <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                    <button onclick="shareTo('whatsapp')" class="share-btn bg-green-500 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">WhatsApp</button>
+                    <button onclick="shareTo('instagram')" class="share-btn bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Instagram</button>
+                    <button onclick="shareTo('facebook')" class="share-btn bg-blue-600 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Facebook</button>
+                    <button onclick="shareTo('linkedin')" class="share-btn bg-blue-700 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">LinkedIn</button>
+                    <button onclick="shareTo('snapchat')" class="share-btn bg-yellow-400 text-gray-900 text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Snapchat</button>
+                </div>
+            </div>
+
+            <div class="p-6 pink-strategy-box rounded-xl">
+                <h3 class="text-lg mb-3">⚡ Strategic Action Blueprint:</h3>
+                <div id="strategyBox" class="whitespace-pre-line leading-relaxed"></div>
             </div>
         </div>
     </div>
 
     <script>
         let currentStudio = 'product';
-
+        
         function updateUploadStatus() {
             const input = document.getElementById('imageInput');
             if(input.files && input.files[0]) {
-                document.getElementById('upload-status').innerHTML = `<span class="font-semibold text-indigo-600">⚡ Loaded: ${input.files[0].name}</span>`;
+                document.getElementById('upload-status').innerText = `⚡ Loaded: ${input.files[0].name}`;
             }
         }
 
-        function setStudio(studio, placeholder) {
-            currentStudio = studio;
-            const labelMap = {
-                'product': 'Describe how you want to enhance your product photo:',
-                'linkedin': 'Describe your professional headshot requirement:',
-                'dating': 'Describe your dating profile vibe/style requirement:',
-                'instagram': 'Describe your Instagram model aesthetic requirement:'
-            };
-            document.getElementById('input-label').innerText = labelMap[studio];
-            document.getElementById('promptInput').placeholder = placeholder;
-
+        function setStudio(type) {
+            currentStudio = type;
             document.querySelectorAll('.studio-btn').forEach(btn => {
-                btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
-                btn.classList.add('border-gray-200', 'text-gray-700');
+                btn.classList.remove('border-2', 'border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
+                btn.classList.add('border', 'border-gray-200', 'text-gray-700');
             });
-            const activeBtn = document.getElementById(`btn-${studio}`);
-            activeBtn.classList.remove('border-gray-200', 'text-gray-700');
-            activeBtn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
+            const activeBtn = document.getElementById(`btn-${type}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border', 'border-gray-200', 'text-gray-700');
+                activeBtn.classList.add('border-2', 'border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
+            }
         }
 
         function compressImage(file) {
@@ -141,7 +139,7 @@
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
             
-            submitBtn.innerText = 'AI Engine Rendering High-End Look...';
+            submitBtn.innerText = 'AI Engine Transforming Facials & Structure... ⚙️';
             submitBtn.disabled = true;
 
             try {
@@ -159,12 +157,6 @@
                 
                 if(data.success) {
                     resultContainer.classList.remove('hidden');
-                    
-                    // Reset all dynamic studio filter classes
-                    outputImage.className = "max-w-full h-auto max-h-96 transition-all duration-300";
-                    // Add specific cinematic dynamic engine class based on selected studio
-                    outputImage.classList.add('studio-preview-' + currentStudio);
-                    
                     outputImage.src = data.image_url;
                     document.getElementById('strategyBox').innerText = data.strategy;
                     resultContainer.scrollIntoView({ behavior: 'smooth' });
@@ -174,9 +166,60 @@
             } catch (error) {
                 alert('Something went wrong during generation!');
             } finally {
-                submitBtn.innerText = 'Generate Crores-Worth Master Photo 🚀';
+                submitBtn.innerText = 'Generate Master Shot 🚀';
                 submitBtn.disabled = false;
             }
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.href = document.getElementById('outputImage').src;
+            link.download = 'AI-Masterpiece.jpg';
+            link.click();
+        }
+
+        async function nativeShare() {
+            const imgElement = document.getElementById('outputImage');
+            try {
+                const response = await fetch(imgElement.src);
+                const blob = await response.blob();
+                const file = new File([blob], 'AI-Masterpiece.jpg', { type: blob.type });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'My AI Transformation',
+                        text: 'Look at my professional photo transformation via AI Multi-Studio Suite Pro!',
+                    });
+                } else {
+                    alert("Native sharing not supported on this browser. Use the direct buttons below!");
+                }
+            } catch (error) {
+                console.error('Error sharing:', error);
+            }
+        }
+
+        window.shareTo = function(platform) {
+            const text = encodeURIComponent("Check out my professional AI transformation on AI Multi-Studio Suite Pro! 🔥");
+            const url = encodeURIComponent(window.location.href);
+            let shareUrl = '';
+
+            switch(platform) {
+                case 'whatsapp':
+                    shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'linkedin':
+                    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+                    break;
+                case 'instagram':
+                case 'snapchat':
+                    alert(`For ${platform.toUpperCase()}, please click 'Download Masterpiece' and post directly to your Feed/Stories!`);
+                    return;
+            }
+            if(shareUrl) window.open(shareUrl, '_blank');
         }
     </script>
 </body>

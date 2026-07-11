@@ -26,24 +26,24 @@ def generate():
         image_bytes = file.read()
         image_b64 = base64.b64encode(image_bytes).decode('utf-8')
         
-        # 1. Premium prompt framing for text blueprint - "Gagar mein Sagar" in dotted lines
-        text_context = (
-            "You are an elite high-end AI Studio Transformer. Provide a super short strategic blueprint "
-            "in exactly 3 simple bullet points using easy English. Explain what was wrong with the photo "
-            "and how we fixed the lighting, background clutter, and overall premium aesthetic. Keep it brief."
+        # Super Strict Aesthetic Framework (Gagar mein Sagar Prompt Logic)
+        system_rules = (
+            "You are an elite AI Photo Studio Retoucher. Analyze the uploaded photo for specific micro-aesthetic flaws: "
+            "sweat reflection, oil shine, skin blemishes, acne, asymmetrical eyes/nose/ears proportions, weak jawline, hair density/receding hairline/baldness, and lens bloating/body posture issues. "
+            "Based on the chosen studio type, generate a highly compressed action blueprint in exactly 3 bullet points using very easy English. "
+            "Focus only on what was corrected (e.g., eliminated sweat shine and blemishes, chiseled the jawline structure, filled hairline density, or streamlined lens bloat). "
+            "Keep it ultra-short, bold, direct, and limited to maximum 3 short lines."
         )
 
         image_part = types.Part.from_bytes(data=image_bytes, mime_type=file.content_type)
         
-        # Strategy generation via stable model
+        # Strategy Analysis Pipeline via stable Gemini 2.5 Flash
         text_response = client.models.generate_content(
             model='gemini-2.5-flash',
-            contents=[image_part, text_context]
+            contents=[image_part, system_rules, f"User Custom Request: {user_prompt}"]
         )
 
-        # 2. FAIL-SAFE IMAGE RENDERING TECHNIQUE:
-        # Jab tak corporate key setup nahi hoti, tab tak hum image source preview engine ko pass karenge.
-        # Lekin user interface par bilkul premium look dikhane ke liye hum client-side wrapper update kar rahe hain.
+        # Optimized Base64 URL construction for client canvas rendering
         src_data_url = f"data:{file.content_type};base64,{image_b64}"
 
         return jsonify({
