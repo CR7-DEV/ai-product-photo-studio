@@ -13,12 +13,16 @@
             font-weight: 800;
             background-color: #fff1f2;
         }
-        /* Advanced Core Filters for Sharp Eyes, Smooth Skin & Professional Background Contrast */
-        .transformed-master-effect {
-            filter: contrast(1.15) brightness(1.05) saturate(1.1) drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-            box-shadow: 0 0 30px rgba(79, 70, 229, 0.3);
-            border: 4px solid #ffffff;
+        /* Asli Golden Hour, Studio Backdrop aur Sharp Facial Enhancements Filter Matrix */
+        .premium-golden-glow {
+            filter: contrast(1.18) brightness(1.08) saturate(1.2) sepia(0.08) drop-shadow(0 20px 25px rgba(219, 39, 119, 0.15));
+            border: 6px solid #ffffff;
+            box-shadow: 0 0 35px rgba(245, 158, 11, 0.45);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(219, 39, 119, 0.2));
+            transform: scale(1.01);
         }
+        .share-btn { transition: all 0.2s ease-in-out; }
+        .share-btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -44,13 +48,13 @@
             <p id="upload-status" class="text-gray-500 text-sm text-center pointer-events-none">📸 Click to upload photo or Drag & Drop</p>
         </div>
 
-        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4 text-gray-700 shadow-sm" placeholder="What should I fix in this photo?"></textarea>
+        <textarea id="promptInput" rows="2" class="w-full p-4 border border-gray-300 rounded-xl mb-4 text-gray-700 shadow-sm focus:ring-2 focus:ring-indigo-500" placeholder="What should I fix in this photo?"></textarea>
         <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-md hover:bg-indigo-700 transition">Generate Master Shot 🚀</button>
 
         <div id="resultContainer" class="hidden mt-8">
-            <div class="p-4 bg-slate-100 rounded-xl flex flex-col items-center mb-4">
-                <h4 class="text-sm font-bold text-gray-700 mb-2">✨ Real-time Visual Enhancer Active</h4>
-                <img id="outputImage" class="w-full rounded-xl transition-all duration-300 mb-2" crossOrigin="anonymous">
+            <div class="p-4 bg-gradient-to-b from-yellow-50 to-pink-50 rounded-xl flex flex-col items-center mb-4 border border-amber-200">
+                <span class="bg-amber-500 text-white font-bold text-xs px-3 py-1 rounded-full mb-3 shadow-sm">🌅 PREMIUM GOLDEN HOUR OUTDOOR FILTER ACTIVE</span>
+                <img id="outputImage" class="w-full rounded-xl transition-all duration-500 mb-2" crossOrigin="anonymous">
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -59,12 +63,13 @@
             </div>
 
             <div class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200">
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 text-center">Share Directly To:</p>
                 <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                    <button onclick="shareTo('whatsapp')" class="share-btn bg-green-500 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">WhatsApp</button>
-                    <button onclick="shareTo('instagram')" class="share-btn bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">Instagram</button>
-                    <button onclick="shareTo('facebook')" class="share-btn bg-blue-600 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">Facebook</button>
-                    <button onclick="shareTo('linkedin')" class="share-btn bg-blue-700 text-white text-xs font-bold py-2 px-1 rounded-lg text-center">LinkedIn</button>
-                    <button onclick="shareTo('snapchat')" class="share-btn bg-yellow-400 text-gray-900 text-xs font-bold py-2 px-1 rounded-lg text-center">Snapchat</button>
+                    <button onclick="shareTo('whatsapp')" class="share-btn bg-green-500 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">WhatsApp</button>
+                    <button onclick="shareTo('instagram')" class="share-btn bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Instagram</button>
+                    <button onclick="shareTo('facebook')" class="share-btn bg-blue-600 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Facebook</button>
+                    <button onclick="shareTo('linkedin')" class="share-btn bg-blue-700 text-white text-xs font-bold py-2 px-1 rounded-lg shadow text-center">LinkedIn</button>
+                    <button onclick="shareTo('snapchat')" class="share-btn bg-yellow-400 text-gray-900 text-xs font-bold py-2 px-1 rounded-lg shadow text-center">Snapchat</button>
                 </div>
             </div>
 
@@ -77,30 +82,39 @@
 
     <script>
         let currentStudio = 'product';
+        
         function updateUploadStatus() {
             const input = document.getElementById('imageInput');
             if(input.files && input.files[0]) {
                 document.getElementById('upload-status').innerHTML = `<span class="text-indigo-600 font-bold">⚡ Loaded: ${input.files[0].name}</span>`;
             }
         }
+
         function setStudio(type) {
             currentStudio = type;
             document.querySelectorAll('.studio-btn').forEach(btn => {
                 btn.classList.remove('border-2', 'border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
                 btn.classList.add('border', 'border-gray-200', 'text-gray-700');
             });
-            document.getElementById(`btn-${type}`).className = "studio-btn p-3 text-sm font-semibold rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 transition";
+            const activeBtn = document.getElementById(`btn-${type}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border', 'border-gray-200', 'text-gray-700');
+                activeBtn.classList.add('border-2', 'border-indigo-600', 'bg-indigo-50', 'text-indigo-700');
+            }
         }
+
         async function generatePhoto() {
             const prompt = document.getElementById('promptInput').value;
             const fileInput = document.getElementById('imageInput');
-            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a photo first!');
-            if (!prompt) return alert('Please enter details!');
+            
+            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a source photo first!');
+            if (!prompt) return alert('Please enter prompt details!');
 
             const submitBtn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
-            submitBtn.innerText = 'AI Engine Restoring & Enhancing Details... ⚙️';
+            
+            submitBtn.innerText = 'AI Engine Transforming Skin & Background Lighting... ⚙️';
             submitBtn.disabled = true;
 
             try {
@@ -109,36 +123,43 @@
                 formData.append('prompt', prompt);
                 formData.append('studio', currentStudio);
 
-                const response = await fetch('/generate', { method: 'POST', body: formData });
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
                 const data = await response.json();
                 
                 if(data.success) {
                     resultContainer.classList.remove('hidden');
                     outputImage.src = data.image_url;
                     
-                    // Trigger the absolute high-end pixel enhancement filter classes
-                    outputImage.className = "w-full rounded-xl transition-all duration-300 transformed-master-effect";
+                    // Appending the absolute Golden Hour Deep Contrast Face Restoration Effect
+                    outputImage.className = "w-full rounded-xl premium-golden-glow";
                     
                     document.getElementById('strategyBox').innerText = data.strategy;
                     resultContainer.scrollIntoView({ behavior: 'smooth' });
                 } else {
-                    alert('Server response error: ' + data.error);
+                    alert('Error: ' + data.error);
                 }
             } catch (error) {
-                alert('Connection failure during generation!');
+                alert('Something went wrong during generation!');
             } finally {
                 submitBtn.innerText = 'Generate Master Shot 🚀';
                 submitBtn.disabled = false;
             }
         }
+
         function downloadImage() {
             const link = document.createElement('a');
             link.href = document.getElementById('outputImage').src;
             link.download = 'AI-Masterpiece.jpg';
             link.click();
         }
-        function shareTo(p) { alert(`Ready to viral! Post the downloaded high-end masterpiece directly to ${p.toUpperCase()}`); }
-        function nativeShare() { alert("Use the direct app buttons below to share instantly!"); }
+
+        function shareTo(platform) {
+            alert(`Ready to viral! Post the downloaded high-end masterpiece directly to ${platform.toUpperCase()}`);
+        }
+        function nativeShare() { alert("Use the direct social network buttons below!"); }
     </script>
 </body>
 </html>
