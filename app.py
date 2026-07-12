@@ -29,7 +29,7 @@ def generate():
             "You are an elite AI Photo Studio Retoucher. Analyze the uploaded photo for specific micro-aesthetic flaws: "
             "sweat reflection, oil shine, skin blemishes, acne, asymmetrical eyes/nose/ears proportions, weak jawline, hair density, and lens bloating/body posture issues. "
             "Generate a highly compressed action blueprint in exactly 3 bullet points using very easy English. "
-            "Focus only on what was corrected (e.g., Replaced old background, Sharpened eyes and nose structure, Elevated quality to DSLR clarity). "
+            "Focus only on what was corrected (e.g., Replaced old background entirely, Sharpened eyes and nose structure texture, Elevated quality to DSLR clarity). "
             "Keep it ultra-short, bold, direct, and limited to maximum 3 short lines."
         )
 

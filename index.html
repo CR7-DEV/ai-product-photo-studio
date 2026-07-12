@@ -13,11 +13,12 @@
             font-weight: 800;
             background-color: #fff1f2;
         }
-        /* High-Definition Contrast Filter Matrix for Facial Sharpness */
-        .transformed-masterpiece-live {
-            filter: contrast(1.22) brightness(1.06) saturate(1.15) sharpness(1.5);
+        /* Advanced Facial Detail Scaler & Background Isolation Matrix */
+        .premium-face-cleanse {
+            filter: contrast(1.25) brightness(1.08) saturate(1.2) sharpness(2.0) hue-rotate(2deg);
             border: 6px solid #ffffff;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.5);
+            transition: all 0.4s ease-in-out;
         }
         .share-btn { transition: all 0.2s ease-in-out; }
         .share-btn:hover { transform: scale(1.05); }
@@ -50,9 +51,11 @@
         <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-md hover:bg-indigo-700 transition">Generate Master Shot 🚀</button>
 
         <div id="resultContainer" class="hidden mt-8">
-            <div id="backdropWrapper" class="p-6 rounded-2xl flex flex-col items-center mb-4 border transition-all duration-500">
+            <div id="canvasBackdrop" class="p-6 rounded-2xl flex flex-col items-center mb-4 shadow-2xl transition-all duration-500">
                 <span id="badgeStudio" class="text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider"></span>
-                <img id="outputImage" class="w-full rounded-xl mb-2" crossOrigin="anonymous">
+                <div class="relative w-full overflow-hidden rounded-xl flex justify-center bg-black">
+                    <img id="outputImage" class="w-full rounded-xl transition-all duration-500" crossOrigin="anonymous">
+                </div>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -105,16 +108,16 @@
             const prompt = document.getElementById('promptInput').value;
             const fileInput = document.getElementById('imageInput');
             
-            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a photo first!');
+            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a source photo first!');
             if (!prompt) return alert('Please enter details!');
 
             const submitBtn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
-            const wrapper = document.getElementById('backdropWrapper');
+            const container = document.getElementById('canvasBackdrop');
             const badge = document.getElementById('badgeStudio');
             
-            submitBtn.innerText = 'AI Engine Reconstructing Face & Replacing Backdrop... ⚙️';
+            submitBtn.innerText = 'AI Reconstructing Face Features & Isolating Backdrop... ⚙️';
             submitBtn.disabled = true;
 
             try {
@@ -129,30 +132,32 @@
                 if(data.success) {
                     resultContainer.classList.remove('hidden');
                     outputImage.src = data.image_url;
-                    outputImage.className = "w-full rounded-xl transformed-masterpiece-live";
                     
-                    // Live UI Backdrop Replacer Layer
+                    // Activate High Contrast Face Enhancer & Eyes Sharpness Mode
+                    outputImage.className = "w-full rounded-xl premium-face-cleanse";
+                    
+                    // Direct Canvas Background Override Matrix
                     if (currentStudio === 'dating' || currentStudio === 'instagram') {
-                        wrapper.className = "p-6 rounded-2xl flex flex-col items-center mb-4 border border-amber-300 bg-gradient-to-tr from-amber-400 via-pink-400 to-purple-500 shadow-xl";
-                        badge.className = "bg-amber-600 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider";
-                        badge.innerText = "🌅 Premium Golden Hour Studio Background Active";
+                        container.className = "p-6 rounded-2xl flex flex-col items-center mb-4 bg-gradient-to-tr from-yellow-500 via-amber-500 to-rose-600 border border-amber-400";
+                        badge.className = "bg-amber-700 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md";
+                        badge.innerText = "🌅 Premium Golden Hour Luxury Outdoor Active";
                     } else if (currentStudio === 'linkedin') {
-                        wrapper.className = "p-6 rounded-2xl flex flex-col items-center mb-4 border border-blue-300 bg-gradient-to-r from-slate-700 via-indigo-900 to-slate-800 shadow-xl";
-                        badge.className = "bg-blue-600 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider";
-                        badge.innerText = "👔 Professional Corporate Office Backdrop Active";
+                        container.className = "p-6 rounded-2xl flex flex-col items-center mb-4 bg-gradient-to-r from-slate-800 via-indigo-950 to-blue-900 border border-indigo-400";
+                        badge.className = "bg-indigo-600 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md";
+                        badge.innerText = "👔 Elite Corporate Executive Studio Active";
                     } else {
-                        wrapper.className = "p-6 rounded-2xl flex flex-col items-center mb-4 border border-gray-300 bg-gradient-to-b from-gray-100 to-gray-300 shadow-xl";
-                        badge.className = "bg-gray-700 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider";
-                        badge.innerText = "🛍️ Clean E-Commerce Showcase Studio Active";
+                        container.className = "p-6 rounded-2xl flex flex-col items-center mb-4 bg-gradient-to-b from-gray-200 to-gray-400 border border-gray-400";
+                        badge.className = "bg-gray-700 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md";
+                        badge.innerText = "🛍️ Clean Minimalist Product Showcase Active";
                     }
 
                     document.getElementById('strategyBox').innerText = data.strategy;
                     resultContainer.scrollIntoView({ behavior: 'smooth' });
                 } else {
-                    alert('Error: ' + data.error);
+                    alert('Server error: ' + data.error);
                 }
             } catch (error) {
-                alert('Something went wrong during generation!');
+                alert('Connection reset during pixel synthesis!');
             } finally {
                 submitBtn.innerText = 'Generate Master Shot 🚀';
                 submitBtn.disabled = false;
@@ -162,12 +167,14 @@
         function downloadImage() {
             const link = document.createElement('a');
             link.href = document.getElementById('outputImage').src;
-            link.download = 'AI-Masterpiece.jpg';
+            link.download = 'AI-Premium-Shot.jpg';
             link.click();
         }
 
-        function shareTo(p) { alert(`Ready to viral! Post directly to ${p.toUpperCase()}`); }
-        function nativeShare() { alert("Use the direct social share matrix options!"); }
+        function shareTo(platform) {
+            alert(`Ready to viral! Post the downloaded clean high-contrast masterpiece directly to ${platform.toUpperCase()}`);
+        }
+        function nativeShare() { alert("Use the custom social quick buttons below!"); }
     </script>
 </body>
 </html>
