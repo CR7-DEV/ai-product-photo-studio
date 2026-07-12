@@ -13,13 +13,11 @@
             font-weight: 800;
             background-color: #fff1f2;
         }
-        /* Asli Golden Hour, Studio Backdrop aur Sharp Facial Enhancements Filter Matrix */
-        .premium-golden-glow {
-            filter: contrast(1.18) brightness(1.08) saturate(1.2) sepia(0.08) drop-shadow(0 20px 25px rgba(219, 39, 119, 0.15));
+        /* High-Definition Contrast Filter Matrix for Facial Sharpness */
+        .transformed-masterpiece-live {
+            filter: contrast(1.22) brightness(1.06) saturate(1.15) sharpness(1.5);
             border: 6px solid #ffffff;
-            box-shadow: 0 0 35px rgba(245, 158, 11, 0.45);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(219, 39, 119, 0.2));
-            transform: scale(1.01);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
         }
         .share-btn { transition: all 0.2s ease-in-out; }
         .share-btn:hover { transform: scale(1.05); }
@@ -52,9 +50,9 @@
         <button onclick="generatePhoto()" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-md hover:bg-indigo-700 transition">Generate Master Shot 🚀</button>
 
         <div id="resultContainer" class="hidden mt-8">
-            <div class="p-4 bg-gradient-to-b from-yellow-50 to-pink-50 rounded-xl flex flex-col items-center mb-4 border border-amber-200">
-                <span class="bg-amber-500 text-white font-bold text-xs px-3 py-1 rounded-full mb-3 shadow-sm">🌅 PREMIUM GOLDEN HOUR OUTDOOR FILTER ACTIVE</span>
-                <img id="outputImage" class="w-full rounded-xl transition-all duration-500 mb-2" crossOrigin="anonymous">
+            <div id="backdropWrapper" class="p-6 rounded-2xl flex flex-col items-center mb-4 border transition-all duration-500">
+                <span id="badgeStudio" class="text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider"></span>
+                <img id="outputImage" class="w-full rounded-xl mb-2" crossOrigin="anonymous">
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -107,14 +105,16 @@
             const prompt = document.getElementById('promptInput').value;
             const fileInput = document.getElementById('imageInput');
             
-            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a source photo first!');
-            if (!prompt) return alert('Please enter prompt details!');
+            if (!fileInput.files || !fileInput.files[0]) return alert('Please upload a photo first!');
+            if (!prompt) return alert('Please enter details!');
 
             const submitBtn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
             const outputImage = document.getElementById('outputImage');
+            const wrapper = document.getElementById('backdropWrapper');
+            const badge = document.getElementById('badgeStudio');
             
-            submitBtn.innerText = 'AI Engine Transforming Skin & Background Lighting... ⚙️';
+            submitBtn.innerText = 'AI Engine Reconstructing Face & Replacing Backdrop... ⚙️';
             submitBtn.disabled = true;
 
             try {
@@ -123,19 +123,29 @@
                 formData.append('prompt', prompt);
                 formData.append('studio', currentStudio);
 
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch('/generate', { method: 'POST', body: formData });
                 const data = await response.json();
                 
                 if(data.success) {
                     resultContainer.classList.remove('hidden');
                     outputImage.src = data.image_url;
+                    outputImage.className = "w-full rounded-xl transformed-masterpiece-live";
                     
-                    // Appending the absolute Golden Hour Deep Contrast Face Restoration Effect
-                    outputImage.className = "w-full rounded-xl premium-golden-glow";
-                    
+                    // Live UI Backdrop Replacer Layer
+                    if (currentStudio === 'dating' || currentStudio === 'instagram') {
+                        wrapper.className = "p-6 rounded-2xl flex flex-col items-center mb-4 border border-amber-300 bg-gradient-to-tr from-amber-400 via-pink-400 to-purple-500 shadow-xl";
+                        badge.className = "bg-amber-600 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider";
+                        badge.innerText = "🌅 Premium Golden Hour Studio Background Active";
+                    } else if (currentStudio === 'linkedin') {
+                        wrapper.className = "p-6 rounded-2xl flex flex-col items-center mb-4 border border-blue-300 bg-gradient-to-r from-slate-700 via-indigo-900 to-slate-800 shadow-xl";
+                        badge.className = "bg-blue-600 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider";
+                        badge.innerText = "👔 Professional Corporate Office Backdrop Active";
+                    } else {
+                        wrapper.className = "p-6 rounded-2xl flex flex-col items-center mb-4 border border-gray-300 bg-gradient-to-b from-gray-100 to-gray-300 shadow-xl";
+                        badge.className = "bg-gray-700 text-white font-bold text-xs px-4 py-1 rounded-full mb-4 shadow-md uppercase tracking-wider";
+                        badge.innerText = "🛍️ Clean E-Commerce Showcase Studio Active";
+                    }
+
                     document.getElementById('strategyBox').innerText = data.strategy;
                     resultContainer.scrollIntoView({ behavior: 'smooth' });
                 } else {
@@ -156,10 +166,8 @@
             link.click();
         }
 
-        function shareTo(platform) {
-            alert(`Ready to viral! Post the downloaded high-end masterpiece directly to ${platform.toUpperCase()}`);
-        }
-        function nativeShare() { alert("Use the direct social network buttons below!"); }
+        function shareTo(p) { alert(`Ready to viral! Post directly to ${p.toUpperCase()}`); }
+        function nativeShare() { alert("Use the direct social share matrix options!"); }
     </script>
 </body>
 </html>
